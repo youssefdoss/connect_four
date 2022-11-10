@@ -46,7 +46,7 @@ function makeHtmlBoard() {
     headCell.setAttribute("id", x);
     top.append(headCell);
   }
-  
+
   htmlBoard.append(top);
 
   // dynamically creates the main part of html board
@@ -54,7 +54,7 @@ function makeHtmlBoard() {
   // uses WIDTH to create table cells for each row
   for (let y = 0; y < HEIGHT; y++) {
     const tableRow = document.createElement("tr");
-    
+
     for (let x = 0; x < WIDTH; x++) {
       const tableCell = document.createElement("td");
       tableCell.setAttribute("id", `c-${y}-${x}`);
@@ -75,23 +75,30 @@ function findSpotForCol(x) {
 /** placeInTable: update DOM to place piece into HTML table of board */
 
 function placeInTable(y, x) {
-  // TODO: make a div and insert into correct table cell
+  const tableSpot = document.getElementById(`c-${y}-${x}`);
+
+  const piece = document.createElement("div");
+  piece.classList = `piece p${currPlayer}`; // 'piece p1'
+
+  tableSpot.append(piece);
+
 }
 
 /** endGame: announce game end */
 
 function endGame(msg) {
-  // TODO: pop up alert message
+  alert(msg);
 }
 
 /** handleClick: handle click of column top to play piece */
 
 function handleClick(evt) {
+
   // get x from ID of clicked cell
-  const x = +evt.target.id;
+  const x = +evt.target.id; // col
 
   // get next spot in column (if none, ignore click)
-  const y = findSpotForCol(x);
+  const y = findSpotForCol(x); // row
   if (y === null) {
     return;
   }
@@ -100,16 +107,30 @@ function handleClick(evt) {
   // TODO: add line to update in-memory board
   placeInTable(y, x);
 
+  // update the board variable
+  board[y][x] = currPlayer;
+  // console.log(board);
+
   // check for win
   if (checkForWin()) {
     return endGame(`Player ${currPlayer} won!`);
   }
 
   // check for tie
-  // TODO: check if all cells in board are filled; if so call, call endGame
+  // const tieGame = board.every((cell) => cell !== null); // true or false
+  // check if each element in each row if null
+  const tieGame = board.every(row => row.every((cell) => cell !== null));
+  // console.log("board", board, "tie game", tieGame);
+  if(tieGame){
+    endGame("Tie Game!")
+  }
+
+
+
 
   // switch players
   // TODO: switch currPlayer 1 <-> 2
+  // use a ternary to switch players
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
